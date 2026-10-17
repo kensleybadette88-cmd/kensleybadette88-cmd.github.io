@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#183b35">
+  <meta name="description" content="Kès mwen, ton carnet simple pour suivre revenus, dépenses et épargne.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="goals.css">
+  <title>Kès mwen</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#accueil" aria-label="Kès mwen, accueil"><span class="brand-mark">K</span><span>Kès mwen</span></a>
+    <button class="icon-button" id="install-button" hidden aria-label="Installer l’application" title="Installer">↓</button>
+  </header>
+
+  <main>
+    <section class="screen active" id="screen-home" aria-labelledby="greeting">
+      <div class="greeting-row"><div><p class="eyebrow" id="today-label">MON ESPACE</p><h1 id="greeting">Bonjou 👋</h1></div><span class="avatar">K</span></div>
+      <article class="balance-card">
+        <div class="card-top"><span>Solde estimé</span><span class="live-dot">Mis à jour</span></div>
+        <div class="balance" id="balance-total">0 <small>HTG</small></div>
+        <p class="balance-note">Revenus moins dépenses, convertis en gourdes</p>
+        <div class="balance-pills"><div><span class="pill-icon income-icon">↗</span><div><small>Revenus du mois</small><strong id="income-total">0 HTG</strong></div></div><div><span class="pill-icon expense-icon">↘</span><div><small>Dépenses du mois</small><strong id="expense-total">0 HTG</strong></div></div></div>
+      </article>
+      <div class="section-heading"><div><p class="eyebrow">CE MOIS-CI</p><h2>Ton budget</h2></div><button class="text-button" data-go="budget">Modifier</button></div>
+      <article class="panel budget-panel"><div class="budget-heading"><span>Dépenses utilisées</span><strong id="budget-label">Aucun budget</strong></div><div class="progress-track"><div id="budget-progress" class="progress-fill"></div></div><p id="budget-message" class="muted">Ajoute un budget mensuel pour commencer.</p></article>
+      <div class="section-heading"><div><p class="eyebrow">OÙ VA TON ARGENT ?</p><h2>Dépenses par catégorie</h2></div></div><article class="panel chart-panel"><div id="category-chart" class="chart-list"></div></article>
+      <div class="section-heading"><div><p class="eyebrow">TENDANCE</p><h2>Sur 6 mois</h2></div></div><article class="panel chart-panel"><div id="monthly-chart" class="monthly-chart"></div></article>
+      <div class="section-heading"><div><p class="eyebrow">RÉCENT</p><h2>Dernières opérations</h2></div><button class="text-button" data-go="history">Tout voir</button></div><p class="save-status"></p>
+      <div id="recent-list" class="transaction-list"></div>
+    </section>
+
+    <section class="screen" id="screen-history" aria-labelledby="history-title">
+      <div class="page-heading"><p class="eyebrow">TON ARGENT</p><h1 id="history-title">Opérations</h1><p class="muted">Garde un œil sur les mouvements de ton argent.</p></div>
+      <div class="filter-row"><button class="filter-chip selected" data-filter="all">Tout</button><button class="filter-chip" data-filter="income">Revenus</button><button class="filter-chip" data-filter="expense">Dépenses</button></div>
+      <p class="save-status"></p>
+      <div id="all-list" class="transaction-list full-list"></div>
+    </section>
+
+    <section class="screen" id="screen-budget" aria-labelledby="budget-title">
+      <div class="page-heading"><p class="eyebrow">TES REPÈRES</p><h1 id="budget-title">Budget & épargne</h1><p class="muted">Choisis des objectifs simples qui te ressemblent.</p></div>
+      <article class="panel settings-panel"><div class="panel-title"><span class="setting-icon">◎</span><div><h2>Budget mensuel</h2><p>Limite totale de dépenses</p></div></div><form id="budget-form" class="inline-form"><label class="sr-only" for="budget-input">Budget mensuel en gourdes</label><input id="budget-input" inputmode="decimal" placeholder="Ex. 15 000" autocomplete="off"><span>HTG</span><button class="small-button">Enregistrer</button></form></article>
+      <article class="panel settings-panel"><div class="panel-title"><span class="setting-icon save-icon">✦</span><div><h2>Objectifs d’épargne</h2><p>Indique séparément ce que tu as déjà mis de côté</p></div></div><div id="goals-list" class="goals-list"></div><form id="goal-form" class="inline-form goal-form"><label class="sr-only" for="goal-name-input">Nom de l’objectif</label><input id="goal-name-input" placeholder="Nom, ex. Études" maxlength="35"><label class="sr-only" for="goal-input">Montant de l’objectif en gourdes</label><input id="goal-input" inputmode="decimal" placeholder="Objectif HTG" autocomplete="off"><button class="small-button">Ajouter</button></form></article>
+      <article class="panel settings-panel"><div class="panel-title"><span class="setting-icon rate-icon">$</span><div><h2>Taux de change</h2><p>Gourdes pour 1 dollar américain</p></div></div><form id="rate-form" class="inline-form"><label class="sr-only" for="rate-input">Taux HTG pour 1 USD</label><input id="rate-input" inputmode="decimal" placeholder="Ex. 130" autocomplete="off"><span>HTG / USD</span><button class="small-button">Enregistrer</button></form><p class="hint">Entre un taux fiable toi-même. Il sera conservé avec chaque opération en dollars.</p></article>
+      <article class="panel settings-panel"><div class="panel-title"><span class="setting-icon">＋</span><div><h2>Mes catégories</h2><p>Ajoute tes propres catégories</p></div></div><form id="category-form" class="inline-form"><label class="sr-only" for="category-new">Nom de la catégorie</label><input id="category-new" maxlength="24" placeholder="Ex. Factures, animaux…"><button class="small-button">Ajouter</button></form><div id="custom-category-list" class="category-chips"></div></article>
+      <article class="panel settings-panel"><div class="panel-title"><span class="setting-icon rate-icon">⇧</span><div><h2>Sauvegarde & export</h2><p>Garde une copie de tes données</p></div></div><div class="action-grid"><button class="outline-button" id="export-csv">Exporter CSV</button><button class="outline-button" id="export-backup">Sauvegarder</button><label class="outline-button file-button" for="import-backup">Restaurer une copie<input id="import-backup" type="file" accept="application/json" hidden></label></div></article>
+      <article class="panel settings-panel"><div class="panel-title"><span class="setting-icon rate-icon">⌑</span><div><h2>Code PIN</h2><p id="pin-status">Aucun code configuré</p></div></div><form id="pin-form" class="inline-form"><label class="sr-only" for="pin-input">Code PIN de 4 à 8 chiffres</label><input id="pin-input" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" placeholder="4 à 8 chiffres" autocomplete="new-password"><button class="small-button" id="pin-submit">Activer</button></form><button class="text-button remove-pin" id="remove-pin" hidden>Retirer le code PIN</button><p class="hint">Le PIN ajoute une barrière simple sur cet appareil; ce n’est pas un coffre-fort et ne chiffre pas les données.</p></article>
+      <p class="privacy-note">🔒 Tes données restent dans ce navigateur. Elles ne sont pas synchronisées entre appareils.</p>
+    </section>
+  </main>
+
+  <button class="fab" id="add-button" aria-label="Ajouter une opération">＋</button>
+  <nav class="bottom-nav" aria-label="Navigation principale"><button class="nav-item active" data-tab="home"><span>⌂</span>Accueil</button><button class="nav-item" data-tab="history"><span>↕</span>Opérations</button><button class="nav-item" data-tab="budget"><span>◉</span>Budget</button></nav>
+
+  <div class="modal-backdrop" id="modal" hidden>
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="form-title">
+      <div class="sheet-handle"></div><div class="sheet-header"><div><p class="eyebrow">OPÉRATION</p><h2 id="form-title">Ajouter un mouvement</h2></div><button class="close-button" id="close-modal" aria-label="Fermer">×</button></div>
+      <form id="transaction-form">
+        <div class="type-switch"><button type="button" class="type-option selected" data-type="expense">Dépense</button><button type="button" class="type-option" data-type="income">Revenu</button></div>
+        <label class="field-label" for="amount-input">Montant</label><div class="amount-field"><input id="amount-input" inputmode="decimal" placeholder="0,00" required autocomplete="off"><select id="currency-input" aria-label="Devise"><option value="HTG">HTG</option><option value="USD">USD</option></select></div>
+        <p id="rate-hint" class="hint rate-hint" hidden></p>
+        <label class="field-label" for="description-input">Description <span class="muted">(facultatif)</span></label><input class="text-input" id="description-input" maxlength="70" placeholder="Ex. Transport, salaire…">
+        <label class="field-label" for="category-input">Catégorie</label><select class="text-input" id="category-input"><option>Alimentation</option><option>Transport</option><option>Logement</option><option>Études</option><option>Santé</option><option>Loisirs</option><option>Travail</option><option>Épargne</option><option>Autre</option></select>
+        <label class="field-label" for="date-input">Date</label><input class="text-input" id="date-input" type="date" required>
+        <button class="submit-button" type="submit">Enregistrer l’opération</button>
+      </form>
+    </section>
+  </div>
+  <div class="lock-screen" id="lock-screen" hidden><div class="lock-card"><span class="brand-mark lock-mark">K</span><p class="eyebrow">KÈS MWEN</p><h1>Entre ton code PIN</h1><form id="unlock-form"><label class="sr-only" for="unlock-pin">Code PIN</label><input id="unlock-pin" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" type="password" placeholder="••••" autocomplete="current-password" required><button class="submit-button">Déverrouiller</button></form><p class="hint" id="unlock-message">Tes données sont enregistrées sur cet appareil.</p></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
+
